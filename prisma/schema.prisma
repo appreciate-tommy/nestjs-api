@@ -10,17 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String
+  email String @unique
   hash  String
 
   firstName String?
   lastName  String?
+
+  @@map("users")
 }
+
+// model 
 
 model Products {
   id        Int      @id @default(autoincrement())
@@ -30,4 +34,20 @@ model Products {
   name        String
   description String?
   link        String?
+
+  @@map("products")
 }
+
+model Post {
+  id    Int    @id @default(autoincrement())
+  title String
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+// model CategoriesOnPosts {
+//   // post Post @relation(fields: [postId], references: [id])
+// }
