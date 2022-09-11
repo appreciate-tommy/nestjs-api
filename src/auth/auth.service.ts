@@ -4,10 +4,15 @@ import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
-// import { ConfigModule } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
+
 @Injectable({})
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwt: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
 
   async signup(dto: AuthDto) {
     const hash = await argon.hash(dto.password);
@@ -18,8 +23,7 @@ export class AuthService {
           hash,
         },
       });
-      delete user.hash;
-      return user;
+      return this.signToken(user.id, user.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -40,8 +44,7 @@ export class AuthService {
     const passwordMatch = await argon.verify(user.hash, dto.password);
     if (!passwordMatch) throw new ForbiddenException('Password does not match');
 
-    delete user.hash;
-    return user;
+    return this.signToken(user.id, user.email);
   }
 
   async currentUser(dto: AuthDto) {
@@ -56,14 +59,17 @@ export class AuthService {
     return { msg: 'I am the user' };
   }
 
-  async signToken(userId: number, email: string) {
+  // no need for a async, because we are returning a promise already
+  signToken(userId: number, email: string): Promise<string> {
     const payload = {
       sub: userId,
       email,
     };
+
+    const secret = this.config.get('JWT_SECRET');
     return this.jwt.signAsync(payload, {
       expiresIn: '15m',
-      secret: '',
+      secret: secret,
     });
   }
 }
