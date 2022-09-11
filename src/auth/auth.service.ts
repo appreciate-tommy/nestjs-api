@@ -67,9 +67,12 @@ export class AuthService {
     };
 
     const secret = this.config.get('JWT_SECRET');
-    return this.jwt.signAsync(payload, {
+
+    // todo: figure out why i can't place this token in an object
+    const token = this.jwt.signAsync(payload, {
       expiresIn: '15m',
       secret: secret,
     });
+    return token;
   }
 }
