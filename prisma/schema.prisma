@@ -20,8 +20,21 @@ model Users {
 
   firstName String?
   lastName  String?
+  Post      Post[]
 
   @@map("users")
+}
+
+// model of a post
+// a post has a title, author, and 
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String
+  author    Users?   @relation(fields: [id], references: [id])
+  content   String?  @db.Text
 }
 
 // model 
@@ -38,16 +51,7 @@ model Products {
   @@map("products")
 }
 
-model Post {
-  id    Int    @id @default(autoincrement())
-  title String
-}
-
 model Category {
   id   Int    @id @default(autoincrement())
   name String
 }
-
-// model CategoriesOnPosts {
-//   // post Post @relation(fields: [postId], references: [id])
-// }

@@ -11,4 +11,4 @@ services:
     networks:
       - nestjs-backend
 networks:
-  nestjs-backend: 
+  nestjs-backend:
