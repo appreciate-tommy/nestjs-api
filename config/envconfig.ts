@@ -6,10 +6,11 @@ export const localConfig = {};
 
 export const config: Config = {
   dir: path.join(__dirname),
-  filename: '../.env.local',
+  filename: '../.env',
   variables: {
     NODE_ENV: `development`,
-    DATABASE_URL: 'postgres://postgres:1234@localhost:5432/nest?schema=public',
+    LOCAL_DATABASE_URL:
+      'postgres://postgres:1234@localhost:5432/nest?schema=public',
   },
 };
 
