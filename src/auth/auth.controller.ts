@@ -11,20 +11,22 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('signup')
   signup(@Body() dto: AuthDto) {
-    console.log({
+    console.log('signup:', {
       dto: dto,
     });
-
     return this.authService.signup(dto);
   }
 
   @Post('login')
-  login() {
-    return this.authService.login();
+  login(@Body() dto: AuthDto) {
+    console.log('login: ', {
+      dto: dto,
+    });
+    return this.authService.login(dto);
   }
 
   @Get('me')
-  me() {
-    return this.authService.me();
+  currentUser(@Body() dto: AuthDto) {
+    return this.authService.currentUser(dto);
   }
 }

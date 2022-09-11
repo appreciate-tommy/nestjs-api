@@ -7,7 +7,6 @@ async function bootstrap() {
   const globalPipes = new ValidationPipe({
     whitelist: true,
   });
-  console.log(globalPipes);
   app.useGlobalPipes(globalPipes);
 
   await app.listen(3333);
